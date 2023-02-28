@@ -40,7 +40,7 @@
             var that = this;
            
             var url = M.cfg.wwwroot;
-            url += "/lib/editor/tinymce/plugins/htmlbootstrapeditor/view.php";
+            url += "/admin/tool/htmlbootstrapeditor/view.php";
             
             this.globalVars.popup = window.open(url, M.str.pluginname, 'scrollbars=1');
     
