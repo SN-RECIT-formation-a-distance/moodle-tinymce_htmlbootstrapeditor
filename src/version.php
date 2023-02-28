@@ -22,6 +22,9 @@ $plugin->version   = 2022041900;
 $plugin->requires  = 2022041200;
 // Full name of the plugin (used for diagnostics).
 $plugin->component = 'tinymce_htmlbootstrapeditor';
+$plugin->release = 'v1.18.1-stable';
+$plugin->supported = [39, 410];      //  Moodle 3.9.x, 3.10.x and 3.11.x are supported.
+$plugin->maturity = MATURITY_STABLE; // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE
  
 $plugin->dependencies = [
 	'tool_htmlbootstrapeditor' => 2021013100
