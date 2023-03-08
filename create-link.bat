@@ -1,5 +1,5 @@
 echo off
-set pluginPath=..\moodledev4\lib\editor\tinymce\plugins\htmlbootstrapeditor
+set pluginPath=..\moodledev4\lib\editor\tiny\plugins\htmlbootstrapeditor
 
 rem remove the current link
 ..\outils\junction -d src

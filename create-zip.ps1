@@ -23,7 +23,7 @@ function Create-Zipfile($zipName, $pluginName, $pluginVersion){
 	& "c:\Program Files\7-Zip\7z.exe" rn "$zipFile" "src\" "$pluginName\"
 }
 
-$zipName="tinymce_htmlbootstrapeditor"
+$zipName="tiny_htmlbootstrapeditor"
 $pluginName="htmlbootstrapeditor"
 $pluginVersion = Get-PluginVersion
 

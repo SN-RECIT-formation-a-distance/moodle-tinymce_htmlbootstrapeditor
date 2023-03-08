@@ -17,35 +17,14 @@
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/admin/tool/htmlbootstrapeditor/lib.php');
 
-function tinymce_htmlbootstrapeditor_strings_for_js(){
+function tiny_htmlbootstrapeditor_strings_for_js(){
     global $PAGE; 
 
     $PAGE->requires->strings_for_js(array('pluginname',
-                                          ), 'tinymce_htmlbootstrapeditor');
+                                          ), 'tiny_htmlbootstrapeditor');
 }
 
-function tinymce_htmlbootstrapeditor_before_standard_top_of_body_html(){
+function tiny_htmlbootstrapeditor_before_standard_top_of_body_html(){
     tool_htmlbootstrapeditor_inject_js();
-}
-
-class tinymce_htmlbootstrapeditor extends editor_tinymce_plugin {
-    /** @var array list of buttons defined by this plugin */
-    protected $buttons = array('htmlbootstrapeditor');
-
-    protected function update_init_params(array &$params, context $context, array $options = null) {
-        tinymce_htmlbootstrapeditor_strings_for_js();
-        tool_htmlbootstrapeditor_strings_for_js();
-
-        if ($row = $this->find_button($params, 'image')) {
-            // Add button after 'image'.
-            $this->add_button_after($params, $row, 'htmlbootstrapeditor', 'image');
-        } else {
-            // If 'image' is not found, add button in the end of the last row.
-            $this->add_button_after($params, $this->count_button_rows($params), 'htmlbootstrapeditor');
-        }
-
-        $params['settings'] = '';
-        // Add JS file, which uses default name.
-        $this->add_js_plugin($params);
-    }
+    tool_htmlbootstrapeditor_strings_for_js();
 }

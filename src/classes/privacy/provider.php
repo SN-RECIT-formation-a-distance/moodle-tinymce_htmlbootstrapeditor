@@ -14,26 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tiny_htmlbootstrapeditor\privacy;
+
 /**
+ * Privacy Subsystem implementation for the htmlbootstrapeditor plugin for TinyMCE.
  *
- * @package    tinymce_reciteditor
+ * @package tiny_htmlbootstrapeditor
  * @copyright  2019 RECIT
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
-
-namespace tinymce_reciteditor\privacy;
-
-defined('MOODLE_INTERNAL') || die();
-
 class provider implements \core_privacy\local\metadata\null_provider {
-
-    /**
-     * Get the language string identifier with the component's language
-     * file to explain why this plugin stores no data.
-     *
-     * @return  string
-     */
-    public static function get_reason() : string {
+    public static function get_reason(): string {
         return 'privacy:metadata';
     }
 }

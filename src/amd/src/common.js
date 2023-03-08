@@ -1,4 +1,3 @@
-<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,23 +14,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Tiny media plugin version details.
  *
- * @package    tiny_htmlbootstrapeditor
+ * @module      tiny_htmlbootstrapeditor/plugin
  * @copyright  2019 RECIT
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2022081800;
-$plugin->requires  = 2020061500;
-$plugin->component = 'tiny_htmlbootstrapeditor';
-
-$plugin->release = 'v1.18.1-stable';
-$plugin->supported = [410, 410];      //  Moodle 4.1.x are supported.
-$plugin->maturity = MATURITY_STABLE; // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE
- 
-$plugin->dependencies = [
-	'tool_htmlbootstrapeditor' => 2021013100
-];
+export default {
+    pluginName: 'tiny_htmlbootstrapeditor/plugin',
+    component: 'tiny_htmlbootstrapeditor',
+    buttonName: 'tiny_htmlbootstrapeditor',
+    icon: 'tiny_htmlbootstrapeditor',
+};
