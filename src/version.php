@@ -24,13 +24,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2022081800;
-$plugin->requires  = 2020061500;
+$plugin->version   = 2024062600;
+$plugin->requires  = 2023100903.11; // 4.3.3+
 $plugin->component = 'tiny_htmlbootstrapeditor';
 
-$plugin->release = 'v1.18.1-stable';
-$plugin->supported = [410, 410];      //  Moodle 4.1.x are supported.
-$plugin->maturity = MATURITY_STABLE; // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE
+$plugin->release = 'v1.0.0-beta';
+$plugin->supported = [403, 405];      //  Moodle 4.1.x are supported.
+$plugin->maturity = MATURITY_BETA; // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE
  
 $plugin->dependencies = [
 	'tool_htmlbootstrapeditor' => 2021013100

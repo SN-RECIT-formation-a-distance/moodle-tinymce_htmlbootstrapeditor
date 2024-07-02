@@ -139,7 +139,7 @@ export class Editor {
         };
 
         this.globalVars.popup.IWrapper.setContent = function(htmlStr){
-            editor.execCommand('mceInsertContent', false, htmlStr);
+            editor.execCommand('mceSetContent', false, htmlStr);
             that.globalVars.popup.close();
         };
 
