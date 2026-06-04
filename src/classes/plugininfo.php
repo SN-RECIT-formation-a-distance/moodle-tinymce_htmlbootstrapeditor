@@ -28,13 +28,28 @@ require_once($CFG->dirroot . '/admin/tool/htmlbootstrapeditor/lib.php');
 /**
  * Tiny htmlbootstrapeditor plugin.
  *
+ * Security notes for maintainers
+ * --------------------------------
+ * - Never output user-controlled data to HTML without Moodle's s() function.
+ *   Do NOT use PHP's htmlspecialchars() directly; s() applies the correct flags
+ *   and encoding for Moodle's context.
+ * - All file operations are delegated to Moodle's repository API
+ *   (/repository/repository_ajax.php) which enforces its own capability and
+ *   itemid ownership checks, providing server-side IDOR protection.
+ *
  * @package    tiny_htmlbootstrapeditor
  * @copyright  2019 RECIT
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
 class plugininfo extends plugin implements plugin_with_buttons, plugin_with_menuitems, plugin_with_configuration {
     /**
-     * Whether the plugin is enabled
+     * Whether the plugin is enabled for the given editor context.
+     *
+     * IDOR note: $options and $fpoptions are populated server-side by the form
+     * that creates the editor instance and are not directly user-controllable.
+     * Requiring both $canhavefiles AND non-empty $fpoptions ensures the plugin
+     * cannot be activated by spoofing $options['maxfiles'] alone — a legitimately
+     * configured file-picker context must also be present.
      *
      * @param context $context The context that the editor is used within
      * @param array $options The options passed in when requesting the editor
@@ -48,13 +63,22 @@ class plugininfo extends plugin implements plugin_with_buttons, plugin_with_menu
         array $fpoptions,
         ?editor $editor = null
     ): bool {
-        // Disabled if:
-        // - Not logged in or guest.
-        // - Files are not allowed.
-        // - Only URL are supported.
+        if (!isloggedin() || isguestuser()) {
+            return false;
+        }
+
         $canhavefiles = !empty($options['maxfiles']);
         $canhaveexternalfiles = !empty($options['return_types']) && ($options['return_types'] & FILE_EXTERNAL);
-        return isloggedin() && !isguestuser() && $canhavefiles && $canhaveexternalfiles;
+
+        // IDOR prevention: require a properly configured file-picker context.
+        // Returning true when $canhavefiles is set but $fpoptions is empty would
+        // let the plugin open with no valid draft-area, potentially attaching
+        // uploads to an unintended or unauthenticated context.
+        if ($canhavefiles && empty($fpoptions)) {
+            return false;
+        }
+
+        return $canhavefiles && $canhaveexternalfiles;
     }
 
     /**
@@ -79,6 +103,10 @@ class plugininfo extends plugin implements plugin_with_buttons, plugin_with_menu
 
     /**
      * Returns the configuration values the plugin needs to take into consideration.
+     *
+     * Any string values added to the returned array that will be rendered in HTML
+     * must be passed through Moodle's s() function — not PHP's htmlspecialchars() —
+     * to ensure correct encoding flags and character set handling.
      *
      * @param context $context
      * @param array $options

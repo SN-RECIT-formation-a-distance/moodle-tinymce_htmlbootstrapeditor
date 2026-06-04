@@ -20,9 +20,9 @@
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
 
-export default {
-    pluginName: 'tiny_htmlbootstrapeditor/plugin',
-    component: 'tiny_htmlbootstrapeditor',
-    buttonName: 'tiny_htmlbootstrapeditor',
-    icon: 'tiny_htmlbootstrapeditor',
-};
+// Named exports so consumers can use `import {component, pluginName, buttonName} from './common'`
+// without relying on Babel default-export interop, which resolves to undefined in AMD/RequireJS.
+export const pluginName  = 'tiny_htmlbootstrapeditor/plugin';
+export const component   = 'tiny_htmlbootstrapeditor';
+export const buttonName  = 'tiny_htmlbootstrapeditor';
+export const icon        = 'tiny_htmlbootstrapeditor';

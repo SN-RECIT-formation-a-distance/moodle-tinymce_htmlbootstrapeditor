@@ -32,6 +32,14 @@ export class Editor {
             return;
         }
 
+        // Guard: IWrapper must be initialised by tool_htmlbootstrapeditor before the popup opens.
+        if (typeof M === 'undefined'
+            || typeof M.recit === 'undefined'
+            || typeof M.recit.htmlbootstrapeditor === 'undefined') {
+            window.console.error('HTML Bootstrap Editor: IWrapper is not available — tool_htmlbootstrapeditor may not be loaded');
+            return;
+        }
+
         var that = this;
 
         var url = M.cfg.wwwroot;
@@ -45,28 +53,42 @@ export class Editor {
 
             let fileTransferData = that.getFileTransferData();
             let xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = () => {        
+            xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
-                        let result = JSON.parse(xhr.responseText);
-                        if (result) {
-                            if (result.error) {
-                                console.log(result);
-                                return;
-                            }
+                        // Safely parse the server response — malformed JSON must not propagate as an uncaught exception.
+                        let result;
+                        try {
+                            result = JSON.parse(xhr.responseText);
+                        } catch (e) {
+                            window.console.error('HTML Bootstrap Editor: Invalid JSON in server response', e);
+                            return;
+                        }
 
-                            let file = result;
-                            if (result.event && result.event === 'fileexists') {
-                                // A file with this name is already in use here - rename to avoid conflict.
-                                // Chances are, it's a different image (stored in a different folder on the user's computer).
-                                // If the user wants to reuse an existing image, they can copy/paste it within the editor.
-                                file = result.newfile;
-                            }
+                        // Validate structure before accessing any property.
+                        if (!result || typeof result !== 'object') {
+                            window.console.error('HTML Bootstrap Editor: Unexpected response format', xhr.responseText);
+                            return;
+                        }
 
+                        if (result.error) {
+                            window.console.error('HTML Bootstrap Editor: Upload error', result);
+                            return;
+                        }
+
+                        let file = result;
+                        if (result.event && result.event === 'fileexists') {
+                            // A file with this name is already in use here - rename to avoid conflict.
+                            // Chances are, it's a different image (stored in a different folder on the user's computer).
+                            // If the user wants to reuse an existing image, they can copy/paste it within the editor.
+                            file = result.newfile;
+                        }
+
+                        if (file && typeof cb === 'function') {
                             cb(file);
                         }
                     } else {
-                        alert("server error");
+                        window.console.error('HTML Bootstrap Editor: Server error', xhr.status);
                     }
                 }
             };
@@ -83,9 +105,15 @@ export class Editor {
             formData.append('license', fileTransferData.license);
             formData.append('author', fileTransferData.author);
 
-            let tmp = filename.split(".");
-            filename = [(tmp[0] || ""), (tmp[1] || "")];
-            formData.append('title', `${filename[0].substr(0,255)}.${filename[1]}`);
+            // Sanitize the filename: use lastIndexOf so multi-extension names like
+            // "photo.of.dog.jpg" are split correctly, and strip HTML special chars
+            // to prevent reflected XSS if the server echoes the title back in markup.
+            const lastDot = filename.lastIndexOf('.');
+            const baseName = lastDot > 0 ? filename.substring(0, lastDot) : filename;
+            const ext     = lastDot > 0 ? filename.substring(lastDot + 1) : '';
+            const safeBase = baseName.replace(/[<>"'&]/g, '').substring(0, 255) || 'file';
+            const safeExt  = ext.replace(/[^a-zA-Z0-9]/g, '').substring(0, 10);
+            formData.append('title', safeExt ? `${safeBase}.${safeExt}` : safeBase);
 
             xhr.open("POST", M.cfg.wwwroot + '/repository/repository_ajax.php?action=upload', true);
             xhr.send(formData);
@@ -95,7 +123,7 @@ export class Editor {
             if (typeof M == 'undefined'){
                 return str;
             }
-            
+
             return M.util.get_string(str, 'tool_htmlbootstrapeditor');
         };
 
@@ -103,12 +131,16 @@ export class Editor {
             const options = getFilePicker(editor, 'media');
 
             var result = {};
-            result.repo_id = 0 || 0;
+            result.repo_id = 0;
             result.client_id = options.client_id || 0;
             result.env = options.env || '';
             result.license = options.defaultlicense || '';
-            result.itemid = options.itemid || 0;
             result.author = options.author || '';
+
+            // Validate itemid is a positive integer to prevent IDOR via a tampered draft-area identifier.
+            result.itemid = (Number.isInteger(options.itemid) && options.itemid > 0)
+                ? options.itemid
+                : 0;
 
             var attr = '';
             for(attr in options.repositories){

@@ -24,10 +24,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2025052201;
+$plugin->version   = 2025052202;
 $plugin->requires  = 2024071200.00; // Moodle 4.5.0
 $plugin->component = 'tiny_htmlbootstrapeditor';
-$plugin->release = 'v1.0.2-stable';
+$plugin->release = 'v1.0.3-stable';
 $plugin->supported = [405, 501];      //  Moodle 4.1.x are supported.
 $plugin->maturity = MATURITY_STABLE; // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE
  

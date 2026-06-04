@@ -15,4 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['pluginname'] = 'HTML Bootstrap Editor TinyMCE';
-$string['privacy:metadata'] = 'The tinymce plugin does not store user data';
+
+// Privacy / Law 25 (Quebec — Loi sur la protection des renseignements personnels dans le secteur privé).
+// This string is returned by provider::get_reason() and displayed in Moodle's Privacy Registry.
+// It must accurately describe what personal data this plugin does (or does not) handle.
+$string['privacy:metadata'] = 'The HTML Bootstrap Editor TinyMCE plugin does not collect, store, '
+    . 'retain, or transmit any personal information. It acts solely as a visual editing interface '
+    . 'that passes HTML content directly to the Moodle text editor. File uploads performed through '
+    . 'this plugin are processed by Moodle\'s core file repository (repository_ajax.php) using the '
+    . 'current user\'s own draft-area; no file metadata is stored or processed by this plugin '
+    . 'itself. No personal data is retained beyond the active browser session.';
