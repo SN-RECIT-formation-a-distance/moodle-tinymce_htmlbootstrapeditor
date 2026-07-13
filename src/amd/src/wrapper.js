@@ -20,6 +20,7 @@
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
 import {getFilePicker} from 'editor_tiny/options';
+import {IWrapper} from 'tool_htmlbootstrapeditor/editor';
 
 export class Editor {
     globalVars = {popup: null};
@@ -32,14 +33,6 @@ export class Editor {
             return;
         }
 
-        // Guard: IWrapper must be initialised by tool_htmlbootstrapeditor before the popup opens.
-        if (typeof M === 'undefined'
-            || typeof M.recit === 'undefined'
-            || typeof M.recit.htmlbootstrapeditor === 'undefined') {
-            window.console.error('HTML Bootstrap Editor: IWrapper is not available — tool_htmlbootstrapeditor may not be loaded');
-            return;
-        }
-
         var that = this;
 
         var url = M.cfg.wwwroot;
@@ -47,7 +40,7 @@ export class Editor {
 
         this.globalVars.popup = window.open(url, 'HTML Bootstrap Editor', 'scrollbars=1');
 
-        this.globalVars.popup.IWrapper = M.recit.htmlbootstrapeditor.IWrapper;
+        this.globalVars.popup.IWrapper = {...IWrapper};
 
         this.globalVars.popup.IWrapper.uploadFile = function(filename, binFile, cb){
 

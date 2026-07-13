@@ -1,5 +1,5 @@
-$from = "moodle-tinymce_htmlbootstrapeditor/src/*"
-$to = "shared/recitfad3/lib/editor/tiny/plugins/htmlbootstrapeditor"
+$from = "moodle-tiny_htmlbootstrapeditor/src/*"
+$to = "shared/recitfad4/public/lib/editor/tiny/plugins/htmlbootstrapeditor"
 $source = "./src";
 
 try {

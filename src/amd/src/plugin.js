@@ -29,7 +29,7 @@ import {Editor} from './wrapper';
 import * as Configuration from './configuration';
 import * as Options from './options';
 
-export default new Promise(async(resolve) => {
+export default (async() => {
     const bseditor = new Editor();
     const [
         tinyMCE,
@@ -68,5 +68,5 @@ export default new Promise(async(resolve) => {
     });
 
     // Resolve the Media Plugin and include configuration.
-    resolve([`${component}/plugin`, Configuration]);
-});
+    return [`${component}/plugin`, Configuration];
+})();
